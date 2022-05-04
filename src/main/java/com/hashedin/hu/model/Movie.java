@@ -30,7 +30,7 @@ public class Movie {
     @DynamoDBAttribute
     private String dateOfPublish;
     @DynamoDBAttribute
-    private String year;
+    private int yearIn;
     @DynamoDBAttribute
     private String genre;
     @DynamoDBAttribute
@@ -39,7 +39,7 @@ public class Movie {
     private String country;
     @JsonIgnore
     @DynamoDBAttribute
-    private String language;
+    private String languageMovie;
 
     @JsonIgnore
     @DynamoDBAttribute
@@ -91,27 +91,27 @@ public class Movie {
     @DynamoDBAttribute
     private String criticsReview;
 
-    public Movie(String title, String year, String genre, String duration, String country, String language) {
+    public Movie(String title, int yearIn, String genre, String duration, String country, String languageMovie) {
         this.title = title;
-        this.year = year;
+        this.yearIn = yearIn;
         this.genre = genre;
         this.duration = duration;
         this.country = country;
-        this.language = language;
+        this.languageMovie = languageMovie;
     }
 
-    public Movie(String imdbId, String title, String dateOfPublish, String year, String genre, String duration,
-                 String country, String language, String director, String writer, String productionCompany,
+    public Movie(String imdbId, String title, String dateOfPublish, int yearIn, String genre, String duration,
+                 String country, String languageMovie, String director, String writer, String productionCompany,
                  String actors, String description, String avgVote, String vote, String budget, String usaGrossIncome,
                  String worldwideGrossIncome, String metaScore, String userReview, String criticsReview) {
         this.imdbId = imdbId;
         this.title = title;
         this.dateOfPublish = dateOfPublish;
-        this.year = year;
+        this.yearIn = yearIn;
         this.genre = genre;
         this.duration = duration;
         this.country = country;
-        this.language = language;
+        this.languageMovie = languageMovie;
         this.director = director;
         this.writer = writer;
         this.productionCompany = productionCompany;

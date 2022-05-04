@@ -6,13 +6,19 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ExpectedAttributeValue;
 import com.hashedin.hu.model.Movie;
+import com.hashedin.hu.service.MovieService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Repository
 public class MovieRepository {
+
+    private static Logger logger = LoggerFactory.getLogger(MovieRepository.class);
 
     @Autowired
     private DynamoDBMapper dynamoDBMapper;
@@ -26,6 +32,59 @@ public class MovieRepository {
         dynamoDBMapper.batchSave(movieList);
         return movieList;
     }
+
+    public List<Movie> findMoviesByDirectorandYear(String director,int lower,int upper){
+        HashMap<String, AttributeValue> condition=new HashMap<>();
+
+        condition.put(":v1",new AttributeValue().withS(director));
+        condition.put(":v2",new AttributeValue().withN(String.valueOf(lower)));
+        condition.put(":v3",new AttributeValue().withN(String.valueOf(upper)));
+
+        DynamoDBScanExpression expression=new DynamoDBScanExpression()
+                .withFilterExpression("director = :v1 and yearIn >= :v2 and yearIn <= :v3")
+                .withExpressionAttributeValues(condition);
+
+        List<Movie> dbResult= dynamoDBMapper.scan(Movie.class,expression);
+
+        return dbResult;
+    }
+
+    public List<Movie> findByReview(int review){
+
+        String lang="English";
+        HashMap<String, AttributeValue> condition=new HashMap<>();
+
+        condition.put(":v1",new AttributeValue().withS(lang));
+        condition.put(":v2",new AttributeValue().withS(String.valueOf(review)));
+
+        DynamoDBScanExpression expression=new DynamoDBScanExpression()
+                .withFilterExpression("languageMovie = :v1 and userReview > :v2")
+                .withExpressionAttributeValues(condition);
+
+
+        List<Movie> dbResult= dynamoDBMapper.scan(Movie.class,expression);
+
+        return dbResult;
+    }
+
+    public List<Movie> findByYearAndCountry(int year,String country){
+
+        HashMap<String, AttributeValue> condition=new HashMap<>();
+
+        condition.put(":v1",new AttributeValue().withS(country));
+        condition.put(":v2",new AttributeValue().withN(String.valueOf(year)));
+
+        DynamoDBScanExpression expression=new DynamoDBScanExpression()
+                .withFilterExpression("country = :v1 and yearIn = :v2")
+                .withExpressionAttributeValues(condition);
+
+        List<Movie> dbResult= dynamoDBMapper.scan(Movie.class,expression);
+
+        return dbResult;
+
+    }
+
+
 
     public Movie findById(String id){
        return dynamoDBMapper.load(Movie.class, id);

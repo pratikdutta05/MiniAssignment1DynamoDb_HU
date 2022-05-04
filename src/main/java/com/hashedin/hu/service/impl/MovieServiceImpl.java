@@ -13,7 +13,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,6 +36,7 @@ public class MovieServiceImpl implements MovieService {
         try {
             Movie movie;
             BufferedReader bufferedReader=new BufferedReader(new FileReader("src/main/resources/movies.csv"));
+            logger.info("File Read Successfull form csv");
             while((line=bufferedReader.readLine())!=null) {
 
                 if(firstline){
@@ -44,8 +44,9 @@ public class MovieServiceImpl implements MovieService {
                     continue;
                 }
                 String[] values = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-                //movie=new Movie(values[1],values[3],values[5],values[6],values[7],values[8] );
-                movie=new Movie(values[0],values[1],values[4],values[3],values[5],values[6],values[7],values[8],
+
+
+                movie=new Movie(values[0],values[1],values[4],Integer.parseInt(values[3]),values[5],values[6],values[7],values[8],
                         values[9],values[10],values[11],values[12],values[13],values[14],values[15],values[16],
                         values[17],values[18],values[19],values[20],values[21]);
                 records.add(movie);
@@ -53,9 +54,9 @@ public class MovieServiceImpl implements MovieService {
             }
 
 
-            logger.info("Data Read successfull from csv file");
+            logger.info("Data Mapped successfull from csv to Model");
 
-            return movieRepository.saveAll(records);
+           return movieRepository.saveAll(records);
 
 
         } catch (FileNotFoundException e) {
@@ -75,36 +76,48 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public Movie findById(String id){
         logger.info("find movie by id" + this.getClass().getName());
-        //return movieRepository.findById(id);
         return movieRepository.findById(id);
     }
 
+
     @Override
-    public List<Movie> findByDirector(String director,int lower,int upper) {
-        List<Movie> dbResult=movieRepository.findAll();
-        List<Movie> filterList= dbResult.stream()
-                .filter( i-> director.equalsIgnoreCase(i.getDirector()))
-                .filter(i->Integer.parseInt(i.getYear())>=lower)
-                .filter(i->Integer.parseInt(i.getYear())<=upper)
-                .collect(Collectors.toList());
-        return filterList;
+    public List<Movie> findByDirectorAndYear(String director,int lower,int upper) {
+
+        return movieRepository.findMoviesByDirectorandYear(director,lower,upper);
     }
 
     /**
      * @param review User Review
      * @return List of Movie
      */
+
     @Override
     public List<String> findByReview(int review) {
-        List<Movie> dbResult=movieRepository.findAll();
+        List<Movie> dbResult=movieRepository.findByReview(review);
 
-        List<String> titles=dbResult.stream().filter(i->"English".equalsIgnoreCase(i.getLanguage()))
-                .filter(i->i.getUserReview()!=null)
-                .filter(i->Integer.parseInt(i.getUserReview())>review)
+        List<String> titles=dbResult.stream()
                 .sorted(Comparator.comparing(Movie::getUserReview).reversed())
                 .map(i->i.getTitle())
                 .collect(Collectors.toList());
+
         return titles;
+    }
+
+    /**
+     * @param year
+     * @param country
+     * @return
+     */
+    @Override
+    public String findByYearAndCountry(int year, String country) {
+
+        List<Movie> dbResult= movieRepository.findByYearAndCountry(year,country);
+
+        Movie res= dbResult.stream()
+                       .max(Comparator.comparing(Movie::getBudget)).get();
+
+        return res.getTitle();
+
     }
 
 

@@ -1,6 +1,8 @@
 package com.hashedin.hu.filter;
 
+import com.hashedin.hu.exception.UnauthorisedException;
 import lombok.Data;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
@@ -52,9 +54,11 @@ public class ExecutionTimeFilter implements Filter {
             HttpServletRequest request=(HttpServletRequest)req;
 
             if(request.getHeader("X-Auth-Token").isEmpty()){
-                throw new RuntimeException("Unauthorised Exception");
+                logger.info("Exception Occur X-Auth-Token is missing in header!{}",((HttpServletRequest) req).getRequestURI());
+                HttpServletResponse httpServletResponse = (HttpServletResponse) resp;
+                ((HttpServletResponse) resp).setStatus(HttpStatus.SC_UNAUTHORIZED);
+                throw new UnauthorisedException("X-Auth-Token Missing");
             }
-            chain.doFilter(req, resp);
 
         } finally {
             Instant finish = Instant.now();
@@ -62,9 +66,8 @@ public class ExecutionTimeFilter implements Filter {
            HttpServletResponse httpServletResponse = (HttpServletResponse) resp;
             httpServletResponse.setHeader(
                     "X-TIME-TO-EXECUTE", String.valueOf(time));
-
-
             logger.info("{}: {} ms ", ((HttpServletRequest) req).getRequestURI(),  time);
+            chain.doFilter(req, resp);
         }
     }
 

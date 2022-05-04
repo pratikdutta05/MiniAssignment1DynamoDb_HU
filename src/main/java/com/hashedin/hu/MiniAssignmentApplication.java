@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = "com.hashedin.hu")
+//@ComponentScan(basePackages = "com.hashedin.hu")
 //@ComponentScan({"com.hashedin.hu","com.hashedin.hu.config"})
 //@EnableDynamoDBRepositories("com.hashedin.hu.repositories")
 public class MiniAssignmentApplication {

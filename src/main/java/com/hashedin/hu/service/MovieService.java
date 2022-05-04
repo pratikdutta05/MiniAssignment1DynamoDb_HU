@@ -11,7 +11,11 @@ public interface MovieService {
 
     Movie findById(String id);
 
-    List<Movie> findByDirector(String director,int lower,int upper);
+    List<Movie> findByDirectorAndYear(String director,int lower,int upper);
 
     List<String> findByReview(int review);
+
+    String findByYearAndCountry(int year,String country);
+
+
 }
