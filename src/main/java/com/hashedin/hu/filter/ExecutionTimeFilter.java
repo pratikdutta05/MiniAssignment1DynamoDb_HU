@@ -7,13 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
 
-import javax.security.sasl.AuthenticationException;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.crypto.dsig.spec.XPathType;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
@@ -21,7 +18,6 @@ import java.time.Instant;
 
 @Component
 @Data
-@Order(1)
 public class ExecutionTimeFilter implements Filter {
 
     private static final Logger logger = LoggerFactory.getLogger(ExecutionTimeFilter.class);
@@ -60,14 +56,18 @@ public class ExecutionTimeFilter implements Filter {
                 throw new UnauthorisedException("X-Auth-Token Missing");
             }
 
+
         } finally {
+
             Instant finish = Instant.now();
             time = Duration.between(start, finish).toMillis();
-           HttpServletResponse httpServletResponse = (HttpServletResponse) resp;
+            HttpServletResponse httpServletResponse = (HttpServletResponse) resp;
             httpServletResponse.setHeader(
                     "X-TIME-TO-EXECUTE", String.valueOf(time));
-            logger.info("{}: {} ms ", ((HttpServletRequest) req).getRequestURI(),  time);
+            logger.info("{}: Execution Time {} ms ", ((HttpServletRequest) req).getRequestURI(),  time);
+
             chain.doFilter(req, resp);
+
         }
     }
 

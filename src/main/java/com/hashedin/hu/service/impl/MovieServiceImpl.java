@@ -27,16 +27,15 @@ public class MovieServiceImpl implements MovieService {
 
 
     @Override
-    public List<Movie> loadDatainDynamoDb() {
+    public List<Movie> loadDataInDynamoDb() {
 
-        logger.info("Save All Movies " + this.getClass().getName());
         boolean firstline=true;
         String line="";
         List<Movie> records = new ArrayList<>();
         try {
             Movie movie;
             BufferedReader bufferedReader=new BufferedReader(new FileReader("src/main/resources/movies.csv"));
-            logger.info("File Read Successfull form csv");
+            logger.debug("File Read Successfully form csv to buffer reader");
             while((line=bufferedReader.readLine())!=null) {
 
                 if(firstline){
@@ -54,10 +53,9 @@ public class MovieServiceImpl implements MovieService {
             }
 
 
-            logger.info("Data Mapped successfull from csv to Model");
+            logger.info("Data Mapped successfully from csv to Model");
 
            return movieRepository.saveAll(records);
-
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -69,21 +67,21 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public List<Movie> findAll(){
-        logger.info("findAll movies " + this.getClass().getName());
+        logger.debug("findAll movies " + this.getClass().getName());
         return movieRepository.findAll();
     }
 
     @Override
     public Movie findById(String id){
-        logger.info("find movie by id" + this.getClass().getName());
+        logger.debug("find movie by id" + this.getClass().getName());
         return movieRepository.findById(id);
     }
 
 
     @Override
     public List<Movie> findByDirectorAndYear(String director,int lower,int upper) {
-
-        return movieRepository.findMoviesByDirectorandYear(director,lower,upper);
+        logger.debug("find movies by director and given year range " + this.getClass().getName());
+        return movieRepository.findMoviesByDirectorAndYear(director,lower,upper);
     }
 
     /**
@@ -93,7 +91,10 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public List<String> findByReview(int review) {
+
         List<Movie> dbResult=movieRepository.findByReview(review);
+
+        logger.debug("movies by user review received ");
 
         List<String> titles=dbResult.stream()
                 .sorted(Comparator.comparing(Movie::getUserReview).reversed())
@@ -112,6 +113,8 @@ public class MovieServiceImpl implements MovieService {
     public String findByYearAndCountry(int year, String country) {
 
         List<Movie> dbResult= movieRepository.findByYearAndCountry(year,country);
+
+        logger.debug("movie list received based on year and country filter");
 
         Movie res= dbResult.stream()
                        .max(Comparator.comparing(Movie::getBudget)).get();

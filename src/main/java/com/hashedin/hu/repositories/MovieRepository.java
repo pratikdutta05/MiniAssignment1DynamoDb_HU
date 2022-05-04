@@ -6,7 +6,6 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ExpectedAttributeValue;
 import com.hashedin.hu.model.Movie;
-import com.hashedin.hu.service.MovieService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +24,17 @@ public class MovieRepository {
 
     public Movie save(Movie movie){
         dynamoDBMapper.save(movie);
+        logger.debug("movie detail save to DynamoDb");
         return movie;
     }
 
     public List<Movie> saveAll(List<Movie> movieList){
         dynamoDBMapper.batchSave(movieList);
+        logger.debug("List of movies saved to DynamoDb");
         return movieList;
     }
 
-    public List<Movie> findMoviesByDirectorandYear(String director,int lower,int upper){
+    public List<Movie> findMoviesByDirectorAndYear(String director, int lower, int upper){
         HashMap<String, AttributeValue> condition=new HashMap<>();
 
         condition.put(":v1",new AttributeValue().withS(director));
@@ -46,6 +47,7 @@ public class MovieRepository {
 
         List<Movie> dbResult= dynamoDBMapper.scan(Movie.class,expression);
 
+        logger.debug("List of movies received DynamoDb {}",dbResult.size());
         return dbResult;
     }
 
@@ -64,6 +66,8 @@ public class MovieRepository {
 
         List<Movie> dbResult= dynamoDBMapper.scan(Movie.class,expression);
 
+        logger.debug("List of movies received DynamoDb {}",dbResult.size());
+
         return dbResult;
     }
 
@@ -79,6 +83,8 @@ public class MovieRepository {
                 .withExpressionAttributeValues(condition);
 
         List<Movie> dbResult= dynamoDBMapper.scan(Movie.class,expression);
+
+        logger.debug("List of movies received DynamoDb {}",dbResult.size());
 
         return dbResult;
 
@@ -109,11 +115,5 @@ public class MovieRepository {
         dynamoDBMapper.delete(movie);
         return "Movie deleted successfully:: "+id;
     }
-
-    public List<Movie> findByDirector(String director){
-
-        return (List<Movie>) dynamoDBMapper.load(Movie.class, director);
-    }
-
 
 }

@@ -55,7 +55,7 @@ public class MovieController {
     @GetMapping("/english/{review}")
     public ResponseEntity<List<String>> findEnglishMovieByReview(@PathVariable(value = "review") int review){
 
-        logger.info("find English movie by User Review" + this.getClass().getName());
+        logger.info("find English movie by User Review");
 
         return new ResponseEntity<>(movieService.findByReview(review),HttpStatus.OK);
     }
@@ -64,7 +64,7 @@ public class MovieController {
     public ResponseEntity<String> findEnglishMovieByReview(@PathVariable(value = "year") int year,
                                                            @PathVariable(value = "country") String country){
 
-        logger.info("find Max Budget movie by year and country" + this.getClass().getName());
+        logger.info("find Max Budget movie by year and country");
 
         return new ResponseEntity<>(movieService.findByYearAndCountry(year,country),HttpStatus.OK);
     }
@@ -72,8 +72,8 @@ public class MovieController {
 
     @GetMapping("/save-from-csv")
     public ResponseEntity<List<Movie>> saveAll(){
-        logger.info("findAll movies " + this.getClass().getName());
-        return new ResponseEntity<>(movieService.loadDatainDynamoDb(),HttpStatus.CREATED);
+        logger.info("save movies from csv to dynamoDb");
+        return new ResponseEntity<>(movieService.loadDataInDynamoDb(),HttpStatus.CREATED);
     }
 
 }

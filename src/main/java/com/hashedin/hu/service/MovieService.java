@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface MovieService {
 
-    List<Movie> loadDatainDynamoDb();
+    List<Movie> loadDataInDynamoDb();
 
     List<Movie> findAll();
 
