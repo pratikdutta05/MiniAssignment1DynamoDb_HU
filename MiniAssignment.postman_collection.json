@@ -1,0 +1,221 @@
+{
+	"info": {
+		"_postman_id": "e117434a-2353-4d1b-a36a-7bae2fb53662",
+		"name": "MiniAssignment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "save-from-csv",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "hashedin",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "pkd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Auth-Token",
+						"value": "insert",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "localhost:8082/movie/save-from-csv",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"movie",
+						"save-from-csv"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Find by Director name and Year Range",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "hashedin",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "pkd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "lower",
+						"value": "1917",
+						"type": "default"
+					},
+					{
+						"key": "upper",
+						"value": "1920",
+						"type": "default"
+					},
+					{
+						"key": "X-Auth-Token",
+						"value": "test",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "localhost:8082/movie/director/Paul Powell",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"movie",
+						"director",
+						"Paul Powell"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Find By Id",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "hashedin",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "pkd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Auth-Token",
+						"value": "test",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "localhost:8082/movie",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"movie"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch Title using User Review",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "hashedin",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "pkd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Auth-Token",
+						"value": "test",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "localhost:8082/movie/english/20",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"movie",
+						"english",
+						"20"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Find By Country and Year",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "hashedin",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "pkd",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Auth-Token",
+						"value": "test",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "localhost:8082/movie/1923/Sweden",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"movie",
+						"1923",
+						"Sweden"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
