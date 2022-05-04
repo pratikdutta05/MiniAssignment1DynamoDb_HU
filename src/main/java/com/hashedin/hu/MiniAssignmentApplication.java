@@ -1,15 +1,14 @@
 package com.hashedin.hu;
 
-import org.socialsignin.spring.data.dynamodb.repository.EnableScan;
-import org.socialsignin.spring.data.dynamodb.repository.config.EnableDynamoDBRepositories;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-//@ComponentScan(basePackages = "com.hashedin.hu")
-//@ComponentScan({"com.hashedin.hu","com.hashedin.hu.config"})
-//@EnableDynamoDBRepositories("com.hashedin.hu.repositories")
+//@EnableScheduling
+//@ComponentScan(basePackages = "com.hashedin.hu.schedular")
 public class MiniAssignmentApplication {
 
 	public static void main(String[] args) {
