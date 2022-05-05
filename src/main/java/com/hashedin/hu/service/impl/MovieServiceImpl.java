@@ -1,5 +1,6 @@
 package com.hashedin.hu.service.impl;
 
+import com.hashedin.hu.exception.ResourceNotFoundException;
 import com.hashedin.hu.model.Movie;
 import com.hashedin.hu.repositories.MovieRepository;
 import com.hashedin.hu.service.MovieService;
@@ -58,7 +59,7 @@ public class MovieServiceImpl implements MovieService {
            return movieRepository.saveAll(records);
 
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            throw new ResourceNotFoundException("CSV File Not Found");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

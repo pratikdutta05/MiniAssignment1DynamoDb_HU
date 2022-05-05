@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
@@ -29,15 +29,30 @@ public class MovieController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Movie>> findAll(){
+    public ResponseEntity<List<Movie>> findAll(HttpServletResponse res){
+        long startTime = System.currentTimeMillis();
         logger.info("find All movies " + this.getClass().getName());
-        return new ResponseEntity<>(movieService.findAll(),HttpStatus.OK);
+
+        List<Movie> result=movieService.findAll();
+
+        long endTime = System.currentTimeMillis();
+
+        calculateExecutionTime(startTime,endTime,res);
+
+        return new ResponseEntity<>(result,HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Movie> findById(@PathVariable(value = "id") String id){
+    public ResponseEntity<Movie> findById(@PathVariable(value = "id") String id,
+                                          HttpServletResponse res){
+        long startTime = System.currentTimeMillis();
         logger.info("find movie by id {}" ,id);
-        return new ResponseEntity<>(movieService.findById(id),HttpStatus.OK);
+        Movie result=movieService.findById(id);
+        long endTime = System.currentTimeMillis();
+
+        calculateExecutionTime(startTime,endTime,res);
+
+        return new ResponseEntity<>(result,HttpStatus.OK);
     }
 
     /*
@@ -46,34 +61,72 @@ public class MovieController {
     @GetMapping("/director/{director}")
     public ResponseEntity<List<Movie>>findByDirectorAndYear(@PathVariable(value = "director") String director,
                                                             @RequestHeader("lower") int lower,
-                                                            @RequestHeader("upper") int upper){
+                                                            @RequestHeader("upper") int upper,
+                                                            HttpServletResponse res){
 
+        long startTime = System.currentTimeMillis();
         logger.info("find movie by director{} and movie year {} to {}",director,lower,upper);
-        return new ResponseEntity<>(movieService.findByDirectorAndYear(director,lower,upper), HttpStatus.OK);
+        List<Movie> result=movieService.findByDirectorAndYear(director,lower,upper);
+        long endTime = System.currentTimeMillis();
+
+        calculateExecutionTime(startTime,endTime,res);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/english/{review}")
-    public ResponseEntity<List<String>> findEnglishMovieByReview(@PathVariable(value = "review") int review){
+    public ResponseEntity<List<String>> findEnglishMovieByReview(@PathVariable(value = "review") int review,
+                                                                 HttpServletResponse res){
+
+        long startTime = System.currentTimeMillis();
 
         logger.info("find English movie by User Review");
 
-        return new ResponseEntity<>(movieService.findByReview(review),HttpStatus.OK);
+        List<String> result= movieService.findByReview(review);
+
+        long endTime = System.currentTimeMillis();
+
+        calculateExecutionTime(startTime,endTime,res);
+
+        return new ResponseEntity<>(result,HttpStatus.OK);
     }
 
     @GetMapping("/{year}/{country}")
     public ResponseEntity<String> findEnglishMovieByReview(@PathVariable(value = "year") int year,
-                                                           @PathVariable(value = "country") String country){
+                                                           @PathVariable(value = "country") String country,
+                                                           HttpServletResponse res){
 
+        long startTime = System.currentTimeMillis();
         logger.info("find Max Budget movie by year and country");
 
-        return new ResponseEntity<>(movieService.findByYearAndCountry(year,country),HttpStatus.OK);
+        String result=movieService.findByYearAndCountry(year,country);
+
+        long endTime = System.currentTimeMillis();
+
+        calculateExecutionTime(startTime,endTime,res);
+
+        return new ResponseEntity<>(result,HttpStatus.OK);
     }
 
 
     @GetMapping("/save-from-csv")
-    public ResponseEntity<List<Movie>> saveAll(){
+    public ResponseEntity<List<Movie>> saveAll(HttpServletResponse res){
+
+        long startTime = System.currentTimeMillis();
         logger.info("save movies from csv to dynamoDb");
-        return new ResponseEntity<>(movieService.loadDataInDynamoDb(),HttpStatus.CREATED);
+        List<Movie> result=movieService.loadDataInDynamoDb();
+        long endTime = System.currentTimeMillis();
+
+        calculateExecutionTime(startTime,endTime,res);
+
+        return new ResponseEntity<>(result,HttpStatus.CREATED);
+    }
+
+    private  void calculateExecutionTime(Long startTime, Long endTime, HttpServletResponse response){
+
+        Long time=endTime-startTime;
+        logger.debug("Execution Time {} ms ",time);
+        response.addHeader("X-TIME-TO-EXECUTE",time.toString()+" ms");
     }
 
 }
